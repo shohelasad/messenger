@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
+kafka:
+  bootstrap:
+    servers: localhost:9092
+  topic:
+    name: message-topic
+    partitions: 10
+    replicas: 1
+  consumer:
+    group:
+      id: message-group

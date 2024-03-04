@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgresqldb:5432/messengerdb
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+
+kafka:
+  bootstrap:
+    servers: localhost:9092
+  topic:
+    name: message-topic
+    partitions: 10
+    replicas: 1
+  consumer:
+    group:
+      id: message-group
