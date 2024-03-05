@@ -1,5 +1,5 @@
-use messengerdb;
-create table public.message1 (
+
+create table message (
     id bigint primary key not null,
     content character varying(255) not null,
     message_status smallint,
@@ -8,8 +8,7 @@ create table public.message1 (
     sender_id bigint
 );
 
-create table users
-(
+create table users (
     id  bigint  not null primary key,
     nickname varchar(255) not null unique
 );
