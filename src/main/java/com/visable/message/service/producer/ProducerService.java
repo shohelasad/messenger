@@ -7,8 +7,6 @@ import com.visable.message.domain.dto.MessageDto;
 import com.visable.message.domain.enums.MessageStatus;
 import com.visable.message.mapper.MessageMapper;
 import com.visable.message.repository.MessageRepository;
-import io.micrometer.common.util.StringUtils;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,26 +33,22 @@ public class ProducerService {
         this.messageTopic = messageTopic;
     }
 
-    public void sendMessage(MessageDto event) {
+    public MessageStatus sendMessage(MessageDto event) {
         try {
             String partitioningKey = event.senderId() + "-" + event.recipientId();
             int partition = calculatePartition(partitioningKey);
 
-            String message = objectMapper.writeValueAsString(event);
-            ProducerRecord<String, String> record = new ProducerRecord<>(messageTopic, partition, partitioningKey, message);
+            String eventAsString = objectMapper.writeValueAsString(event);
+            ProducerRecord<String, String> record = new ProducerRecord<>(messageTopic, partition, partitioningKey, eventAsString);
 
             CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record).toCompletableFuture();
-            future.whenComplete((result, ex) -> {
-                Message sendMessage = messageMapper.messageDtoToMessage(event);
-                if (ex == null) {
-                    log.info("Sent message: {}", event);
-                    sendMessage.setMessageStatus(MessageStatus.DELIVERED);
-                } else {
-                    log.error("Unable to send message: {}", event, ex);
-                    sendMessage.setMessageStatus(MessageStatus.FAILED);
-                }
-                messageRepository.save(sendMessage);
-            });
+            return future.thenApply(result -> {
+                log.info("Sent message: {}", event);
+                return MessageStatus.DELIVERED;
+            }).exceptionally(ex -> {
+                log.error("Unable to send message: {}", event, ex);
+                return MessageStatus.FAILED;
+            }).join();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

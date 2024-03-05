@@ -12,11 +12,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 public class ConsumerServiceTest {
 
     @InjectMocks

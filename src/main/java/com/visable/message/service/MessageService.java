@@ -25,12 +25,12 @@ public class MessageService {
             throw new RuntimeException("Cannot send message to yourself");
         }
 
-        MessageDto messageEvent = new MessageDto(userId, messageDto.recipientId(),
+        messageDto = new MessageDto(userId, messageDto.recipientId(),
                 messageDto.content(), messageDto.timestamp(), messageDto.messageStatus());
-        producerService.sendMessage(messageEvent);
-        Message message = messageMapper.messageDtoToMessage(messageEvent);
-        Message saveMessage = messageRepository.save(message);
-        return messageMapper.messageToMessageDto(saveMessage);
+        Message message = messageMapper.messageDtoToMessage(messageDto);
+        message = messageRepository.save(message);
+        producerService.sendMessage(messageDto);
+        return messageMapper.messageToMessageDto(message);
     }
 
     public List<MessageDto> getReceivedMessages(Long recipientId) {

@@ -27,25 +27,19 @@
 
 ## How to run
 
-### Run only test cases
-
-```sh
-mvn test
-```
-
-### Package the application as a JAR file
+### Package application as a JAR file
 
 ```sh
 mvn clean install -DskipTests
 ```
 
-### Run the Kafka with Zookeeper and Postgresql
+### Run Kafka with Zookeeper and Postgresql
 
 ```sh
 docker-compose up -d
 ```
 
-### Run the Spring Boot application
+### Run Spring Boot application
 
 ```sh
 mvn spring-boot:run

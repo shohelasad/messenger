@@ -15,8 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,8 +27,10 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 public class ProducerServiceTest {
 
+    @MockBean
     private ProducerService producerService;
 
     @Mock
@@ -63,16 +67,11 @@ public class ProducerServiceTest {
         partitionInfoList.add(new PartitionInfo(messageTopic, 0, null, null, null));
         when(kafkaTemplate.partitionsFor(anyString())).thenReturn(partitionInfoList);
         when(kafkaTemplate.send(any(ProducerRecord.class))).thenReturn(CompletableFuture.completedFuture(mock(SendResult.class)));
-        when(messageRepository.save(any(Message.class))).thenReturn(message);
         CompletableFuture<SendResult<String, String>> future = new CompletableFuture<>();
         future.complete(mock(SendResult.class));
         when(kafkaTemplate.send(any(ProducerRecord.class))).thenReturn(future);
-        when(messageMapper.messageDtoToMessage(messageDto)).thenReturn(message);
 
         producerService.sendMessage(messageDto);
-
-        verify(messageMapper).messageDtoToMessage(messageDto);
         verify(kafkaTemplate, times(1)).send(any(ProducerRecord.class));
-        verify(messageRepository, times(1)).save(any(Message.class));
     }
 }

@@ -50,7 +50,7 @@ public class MessageServiceTest {
         Message message = new Message(1l, sender, recipient, "hello", dateTime, MessageStatus.SEND);
         when(messageMapper.messageDtoToMessage(messageDto)).thenReturn(message);
         when(messageRepository.save(any(Message.class))).thenReturn(message);
-        doNothing().when(producerService).sendMessage(messageDto);
+        when(producerService.sendMessage(any(MessageDto.class))).thenReturn(MessageStatus.DELIVERED);
         when(messageMapper.messageToMessageDto(any(Message.class))).thenReturn(messageDto);
 
         MessageDto result = messageService.sendMessage(userId, messageDto);
