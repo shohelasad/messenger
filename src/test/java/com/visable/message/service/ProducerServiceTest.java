@@ -29,8 +29,6 @@ import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 public class ProducerServiceTest {
-
-    @MockBean
     private ProducerService producerService;
 
     @Mock
@@ -42,7 +40,7 @@ public class ProducerServiceTest {
     @Mock
     private MessageRepository messageRepository;
 
-    @Mock
+    @MockBean
     private MessageMapper messageMapper;
 
     private String messageTopic = "message-topic";
@@ -59,7 +57,6 @@ public class ProducerServiceTest {
         User recipient = new User(2l, "recipient");
         LocalDateTime dateTime = LocalDateTime.now();
         MessageDto messageDto = new MessageDto(1l,2l, "hello", dateTime, MessageStatus.SEND);
-        Message message = new Message(1l, sender, recipient, "hello", dateTime, MessageStatus.SEND);
         String messageDtoJson = objectMapper.writeValueAsString(messageDto);
 
         when(objectMapper.writeValueAsString(messageDto)).thenReturn(messageDtoJson);
