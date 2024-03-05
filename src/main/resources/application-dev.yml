@@ -12,14 +12,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-
-kafka:
-  bootstrap:
-    servers: localhost:9092
-  topic:
-    name: message-topic
-    partitions: 10
-    replicas: 1
-  consumer:
-    group:
-      id: message-group
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: message-group
+    auto-offset-reset: earliest
+    topic:
+      name: message-topic
+      partitions: 10
+      replicas: 1

@@ -21,7 +21,7 @@ public class ConsumerService {
     private final ModelMapper modelMapper;
     private final SimpMessagingTemplate messagingTemplate;
 
-    @KafkaListener(topics = "${kafka.topic.name}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${spring.kafka.topic.name}", groupId = "${spring.kafka.consumer.group-id}")
     public void receiveMessage(ConsumerRecord<String, MessageDto> record) {
         log.info("Message consumed {}", record);
         MessageDto event = record.value();

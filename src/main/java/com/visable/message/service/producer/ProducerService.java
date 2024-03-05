@@ -27,7 +27,7 @@ public class ProducerService {
     private final MessageMapper messageMapper;
     private final String messageTopic;
 
-    public ProducerService(ObjectMapper objectMapper, KafkaTemplate<String, String> kafkaTemplate, MessageRepository messageRepository, MessageMapper messageMapper, @Value("${kafka.topic.name}") String messageTopic) {
+    public ProducerService(ObjectMapper objectMapper, KafkaTemplate<String, String> kafkaTemplate, MessageRepository messageRepository, MessageMapper messageMapper, @Value("${spring.kafka.topic.name}") String messageTopic) {
         this.objectMapper = objectMapper;
         this.kafkaTemplate = kafkaTemplate;
         this.messageRepository = messageRepository;
@@ -36,29 +36,32 @@ public class ProducerService {
     }
 
     public void sendMessage(MessageDto event) {
-        String partitioningKey = event.senderId() + "-" + event.recipientId();
-        int topicSize = kafkaTemplate.partitionsFor(messageTopic).size();
-        int partition = Math.abs(partitioningKey.hashCode()) % topicSize;
-        String message = null;
         try {
-            message = objectMapper.writeValueAsString(event);
+            String partitioningKey = event.senderId() + "-" + event.recipientId();
+            int partition = calculatePartition(partitioningKey);
+
+            String message = objectMapper.writeValueAsString(event);
             ProducerRecord<String, String> record = new ProducerRecord<>(messageTopic, partition, partitioningKey, message);
+
             CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record).toCompletableFuture();
             future.whenComplete((result, ex) -> {
+                Message sendMessage = messageMapper.messageDtoToMessage(event);
                 if (ex == null) {
-                    log.info("Sent message: " + event);
-                    Message sendMessage = messageMapper.messageDtoToMessage(event);
+                    log.info("Sent message: {}", event);
                     sendMessage.setMessageStatus(MessageStatus.DELIVERED);
-                    messageRepository.save(sendMessage);
                 } else {
-                    log.error("Unable to send message : " + event, ex);
-                    Message sendMessage = messageMapper.messageDtoToMessage(event);
+                    log.error("Unable to send message: {}", event, ex);
                     sendMessage.setMessageStatus(MessageStatus.FAILED);
-                    messageRepository.save(sendMessage);
                 }
+                messageRepository.save(sendMessage);
             });
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private int calculatePartition(String partitioningKey) {
+        int topicSize = kafkaTemplate.partitionsFor(messageTopic).size();
+        return Math.abs(partitioningKey.hashCode()) % topicSize;
     }
 }

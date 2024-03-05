@@ -14,7 +14,7 @@ import java.util.Map;
 @Configuration
 public class KafkaTopicConfig {
 
-    @Value(value = "${kafka.bootstrap.servers}")
+    @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
 
     public KafkaAdmin kafkaAdmin() {
@@ -23,13 +23,13 @@ public class KafkaTopicConfig {
         return new KafkaAdmin(configs);
     }
 
-    @Value(value = "${kafka.topic.name}")
+    @Value(value = "${spring.kafka.topic.name}")
     private String messageTopic;
 
-    @Value(value = "${kafka.topic.partitions}")
+    @Value(value = "${spring.kafka.topic.partitions}")
     private int partitions;
 
-    @Value(value = "${kafka.topic.replicas}")
+    @Value(value = "${spring.kafka.topic.replicas}")
     private int replicas;
 
     @Bean
