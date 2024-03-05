@@ -1,4 +1,4 @@
-package com.visable.message.service;
+package com.visable.message.service.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.visable.message.domain.dto.MessageDto;

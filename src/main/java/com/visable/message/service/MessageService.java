@@ -28,8 +28,9 @@ public class MessageService {
         messageDto = new MessageDto(userId, messageDto.recipientId(),
                 messageDto.content(), messageDto.timestamp(), messageDto.messageStatus());
         Message message = messageMapper.messageDtoToMessage(messageDto);
+        MessageStatus status = producerService.sendMessage(messageDto);
+        message.setMessageStatus(status);
         message = messageRepository.save(message);
-        producerService.sendMessage(messageDto);
         return messageMapper.messageToMessageDto(message);
     }
 

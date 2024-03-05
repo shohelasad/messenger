@@ -1,4 +1,4 @@
-package com.visable.message.service;
+package com.visable.message.service.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +8,7 @@ import com.visable.message.domain.dto.MessageDto;
 import com.visable.message.domain.enums.MessageStatus;
 import com.visable.message.mapper.MessageMapper;
 import com.visable.message.repository.MessageRepository;
+import com.visable.message.service.UserService;
 import com.visable.message.service.producer.ProducerService;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.PartitionInfo;
@@ -40,7 +41,7 @@ public class ProducerServiceTest {
     @Mock
     private MessageRepository messageRepository;
 
-    @MockBean
+    @Mock
     private MessageMapper messageMapper;
 
     private String messageTopic = "message-topic";
