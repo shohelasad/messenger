@@ -21,14 +21,12 @@ public class MessageService {
     private final MessageMapper messageMapper;
 
     public MessageDto sendMessage(Long userId, MessageDto messageDto)  {
-        if (messageDto.recipientId().equals(userId)) {
-            throw new RuntimeException("Cannot send message to yourself");
-        }
+        if (messageDto.recipientId().equals(userId)) throw new IllegalArgumentException("Cannot send message to yourself");
 
-        messageDto = new MessageDto(userId, messageDto.recipientId(),
+        MessageDto messageEvent = new MessageDto(userId, messageDto.recipientId(), //set userId
                 messageDto.content(), messageDto.timestamp(), messageDto.messageStatus());
-        Message message = messageMapper.messageDtoToMessage(messageDto);
-        MessageStatus status = producerService.sendMessage(messageDto);
+        Message message = messageMapper.messageDtoToMessage(messageEvent);
+        MessageStatus status = producerService.sendMessage(messageEvent);
         message.setMessageStatus(status);
         message = messageRepository.save(message);
         return messageMapper.messageToMessageDto(message);

@@ -2,11 +2,8 @@ package com.visable.message.service.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.visable.message.domain.Message;
 import com.visable.message.domain.dto.MessageDto;
 import com.visable.message.domain.enums.MessageStatus;
-import com.visable.message.mapper.MessageMapper;
-import com.visable.message.repository.MessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,15 +18,11 @@ import java.util.concurrent.CompletableFuture;
 public class ProducerService {
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final MessageRepository messageRepository;
-    private final MessageMapper messageMapper;
     private final String messageTopic;
 
-    public ProducerService(ObjectMapper objectMapper, KafkaTemplate<String, String> kafkaTemplate, MessageRepository messageRepository, MessageMapper messageMapper, @Value("${spring.kafka.topic.name}") String messageTopic) {
+    public ProducerService(ObjectMapper objectMapper, KafkaTemplate<String, String> kafkaTemplate,  @Value("${spring.kafka.topic.name}") String messageTopic) {
         this.objectMapper = objectMapper;
         this.kafkaTemplate = kafkaTemplate;
-        this.messageRepository = messageRepository;
-        this.messageMapper = messageMapper;
         this.messageTopic = messageTopic;
     }
 
@@ -39,9 +32,9 @@ public class ProducerService {
             int partition = calculatePartition(partitioningKey);
 
             String eventAsString = objectMapper.writeValueAsString(event);
-            ProducerRecord<String, String> record = new ProducerRecord<>(messageTopic, partition, partitioningKey, eventAsString);
+            ProducerRecord<String, String> eventRecord = new ProducerRecord<>(messageTopic, partition, partitioningKey, eventAsString);
 
-            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record).toCompletableFuture();
+            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(eventRecord).toCompletableFuture();
             return future.thenApply(result -> {
                 log.info("Sent message: {}", event);
                 return MessageStatus.DELIVERED;

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
     @Mock
     private UserMapper userMapper;
@@ -31,7 +31,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void testCreateUser_Success() {
+    void testCreateUser_Success() {
         UserDto userDto = new UserDto(1l, "testuser");
         User user = new User(1l, "testuser");
         when(userMapper.userDtoToUser(userDto)).thenReturn(user);
@@ -43,7 +43,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testCreateUser_NicknameAlreadyExists() {
+    void testCreateUser_NicknameAlreadyExists() {
         UserDto userDto = new UserDto(1l, "existingNickname");
         String existingNickname = "existingNickname";
         when(userRepository.findByNickname(existingNickname)).thenReturn(Optional.of(new User()));
@@ -51,7 +51,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserById_UserExists() {
+    void testGetUserById_UserExists() {
         Long userId = 1L;
         User user = new User(1l, "testuser");
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -60,7 +60,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserById_UserNotFound() {
+    void testGetUserById_UserNotFound() {
         Long userId = 1L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
         assertThrows(RuntimeException.class, () -> userService.getUserById(userId));

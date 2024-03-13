@@ -21,7 +21,7 @@ public class MessageMapper {
     }
 
     public List<MessageDto> messageToMessageDtoList(List<Message> messages) {
-        return messages.stream().map(message -> messageToMessageDto(message)).toList();
+        return messages.stream().map(this::messageToMessageDto).toList();
     }
 
     public Message messageDtoToMessage(MessageDto messageDto) {

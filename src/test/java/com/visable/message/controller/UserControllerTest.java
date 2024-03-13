@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -22,7 +22,7 @@ public class UserControllerTest {
     private UserService userService;
 
     @Test
-    public void testCreateUser() throws Exception {
+    void testCreateUser() throws Exception {
         UserDto userDto = new UserDto(1l, "testuser");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 

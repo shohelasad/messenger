@@ -2,21 +2,15 @@ package com.visable.message.service.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.visable.message.domain.Message;
 import com.visable.message.domain.User;
 import com.visable.message.domain.dto.MessageDto;
 import com.visable.message.domain.enums.MessageStatus;
-import com.visable.message.mapper.MessageMapper;
-import com.visable.message.repository.MessageRepository;
-import com.visable.message.service.UserService;
-import com.visable.message.service.producer.ProducerService;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.PartitionInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
-public class ProducerServiceTest {
+class ProducerServiceTest {
     private ProducerService producerService;
 
     @Mock
@@ -38,22 +32,16 @@ public class ProducerServiceTest {
     @Mock
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    @Mock
-    private MessageRepository messageRepository;
-
-    @Mock
-    private MessageMapper messageMapper;
-
     private String messageTopic = "message-topic";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.initMocks(this);
-        producerService = new ProducerService(objectMapper, kafkaTemplate, messageRepository, messageMapper, messageTopic);
+        producerService = new ProducerService(objectMapper, kafkaTemplate, messageTopic);
     }
 
     @Test
-    public void testSendMessage_Success() throws JsonProcessingException {
+    void testSendMessage_Success() throws JsonProcessingException {
         User sender = new User(1l, "sender");
         User recipient = new User(2l, "recipient");
         LocalDateTime dateTime = LocalDateTime.now();

@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-public class MessageServiceTest {
+class MessageServiceTest {
     @Mock
     private UserService userService;
 
@@ -41,7 +41,7 @@ public class MessageServiceTest {
 
 
     @Test
-    public void testSendMessage() {
+    void testSendMessage() {
         Long userId = 1L;
         User sender = new User(1l, "sender");
         User recipient = new User(2l, "recipient");
@@ -61,7 +61,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testGetReceivedMessages() {
+    void testGetReceivedMessages() {
         Long recipientId = 1L;
         User recipient = new User(1l, "recipient");
         List<Message> messages = new ArrayList<>();
@@ -76,7 +76,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testGetSentMessages() {
+    void testGetSentMessages() {
         Long senderId = 1L;
         User sender = new User(1l, "sender");
         List<Message> messages = new ArrayList<>();
@@ -91,7 +91,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testGetMessagesFromUser() {
+    void testGetMessagesFromUser() {
         Long recipientId = 1L;
         Long senderId = 2L;
         User recipient = new User(1l, "recipient");

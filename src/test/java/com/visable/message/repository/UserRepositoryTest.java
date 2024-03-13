@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-public class UserRepositoryTest {
+class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
@@ -32,14 +32,14 @@ public class UserRepositoryTest {
 
 
     @Test
-    public void testFindByNicknameExist() {
+    void testFindByNicknameExist() {
         Optional<User> userOptional = userRepository.findByNickname(sender.getNickname());
 
         assertThat(userOptional).isNotEmpty();
     }
 
     @Test
-    public void testFindByNicknameNotExist() {
+    void testFindByNicknameNotExist() {
         Optional<User> userOptional = userRepository.findByNickname("notExist");
 
         assertThat(userOptional).isNotPresent();

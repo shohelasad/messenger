@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-public class MessageRepositoryTest {
+class MessageRepositoryTest {
 
     @Autowired
     private MessageRepository messageRepository;
@@ -47,26 +47,23 @@ public class MessageRepositoryTest {
 
 
     @Test
-    public void testFindBySender() {
+    void testFindBySender() {
         List<Message> result = messageRepository.findBySender(sender);
 
-        assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotEmpty().hasSize(2);
     }
 
     @Test
-    public void testFindByRecipient() {
+    void testFindByRecipient() {
         List<Message> result = messageRepository.findByRecipient(recipient);
 
-        assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotEmpty().hasSize(2);
     }
 
     @Test
-    public void testFindByRecipientAndSender() {
+    void testFindByRecipientAndSender() {
         List<Message> result = messageRepository.findByRecipientAndSender(recipient, sender);
 
-        assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(2);
+        assertThat(result).isNotEmpty().hasSize(2);
     }
 }

@@ -3,7 +3,6 @@ package com.visable.message.service.consumer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.visable.message.domain.dto.MessageDto;
 import com.visable.message.domain.enums.MessageStatus;
-import com.visable.message.service.consumer.ConsumerService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
-public class ConsumerServiceTest {
+class ConsumerServiceTest {
 
     @InjectMocks
     private ConsumerService consumerService;
@@ -39,7 +38,7 @@ public class ConsumerServiceTest {
     }
 
     @Test
-    public void testReceiveMessage_Success() {
+    void testReceiveMessage_Success() {
         String content = "Test message";
         Long recipientId = 2L;
         LocalDateTime dateTime = LocalDateTime.now();
